@@ -11,8 +11,14 @@
 ### 3) Preguntas
 - Q1: ¿Cómo se distribuyen los datos después de la limpieza?
 - Q2: ¿Qué características nuevas se pueden derivar?
-- Q3: ¿Qué insights se obtienen de las visualizaciones?
-- (opcionales)
+
+**Preguntas de negocio**
+
+1. ¿A qué edad alcanzan el pico de rendimiento los atletas (medido con Dots) y difiere entre hombres y mujeres?
+2. ¿Cómo progresan los atletas dentro de una competición? ¿Suben de peso entre intentos 1→2→3 o tienden a repetir/bajar?
+3. ¿En qué levantamiento (squat, bench, deadlift) se producen más fallos en el 3er intento?
+4. ¿Difiere el rendimiento registrado entre federaciones, controlando por categoría de peso y sexo?
+5. ¿El 4º intento permite a los atletas superar su mejor marca de los 3 primeros? ¿Cuál es la tasa de éxito?
 
 ### 4) Data issues & fixes
 - Valores faltantes → Limpieza y imputación en src/cleaning.py
