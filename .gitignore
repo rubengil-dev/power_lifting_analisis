@@ -1,3 +1,4 @@
 *proyecto.txt
 .venv
 __pycache__
+*.csv
