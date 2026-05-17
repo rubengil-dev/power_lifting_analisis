@@ -17,7 +17,7 @@
 1. ¿A qué edad alcanzan el pico de rendimiento los atletas (medido con Dots) y difiere entre hombres y mujeres?
 2. ¿Cómo progresan los atletas dentro de una competición? ¿Suben de peso entre intentos 1→2→3 o tienden a repetir/bajar?
 3. ¿En qué levantamiento (squat, bench, deadlift) se producen más fallos en el 3er intento?
-4. ¿Difiere el rendimiento registrado entre federaciones, controlando por categoría de peso y sexo?
+4. ¿Los atletas que compiten en más eventos full lifting rinden más o menos que los que se especializan en un sólo tipo de levantamiento?
 5. ¿El 4º intento permite a los atletas superar su mejor marca de los 3 primeros? ¿Cuál es la tasa de éxito?
 
 ### 4) Data issues & fixes
