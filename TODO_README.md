@@ -8,6 +8,10 @@
 - Nº filas/columnas: Variable (depende del archivo cargado)
 - Variables clave: Columnas de datos numéricos y categóricos para análisis
 
+openpowerlifting-latest.zip [158Mb, 3925888 rows, The complete dataset.]
+
+[text](https://openpowerlifting.gitlab.io/opl-csv/bulk-csv.html)
+
 ### 3) Preguntas
 - Q1: ¿Cómo se distribuyen los datos después de la limpieza?
 - Q2: ¿Qué características nuevas se pueden derivar?
