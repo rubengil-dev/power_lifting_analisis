@@ -16,16 +16,6 @@ def bool_lift(df: pd.DataFrame) -> pd.DataFrame:
 
     for attempt, bool_col in BOOL_COLS:
 
-        df[bool_col] = (df[attempt] > 0).astype('boolean')
+        df[bool_col] = pd.Series(np.where(df[attempt].isna(), pd.NA, df[attempt] > 0)).astype('boolean')
 
-        # TERCER INTENTO
-        df['Bench3bool'] = np.where(pd.notna(df['Bench3Kg']), np.where(df['Bench3Kg'] > 0, True, False), np.nan)
-        df['Squat3bool'] = np.where(pd.notna(df['Squat3Kg']), np.where(df['Squat3Kg'] > 0, True, False), np.nan)
-        df['Deadlift3bool'] = np.where(pd.notna(df['Deadlift3Kg']), np.where(df['Deadlift3Kg'] > 0, True, False), np.nan)
-
-        # CUARTO INTENTO
-        df['Bench4bool'] = np.where(pd.notna(df['Bench4Kg']), np.where(df['Bench4Kg'] > 0, True, False), np.nan)
-        df['Squat4bool'] = np.where(pd.notna(df['Squat4Kg']), np.where(df['Squat4Kg'] > 0, True, False), np.nan)
-        df['Deadlift4bool'] = np.where(pd.notna(df['Deadlift4Kg']), np.where(df['Deadlift4Kg'] > 0, True, False), np.nan)
-
-    return df
+        return df

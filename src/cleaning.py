@@ -85,7 +85,7 @@ def best_cleaner(df: pd.DataFrame) -> pd.DataFrame:
     
     # COLS A CHEQUEAR
     for best_col, lift_cols in LIFT_COLS:
-        
+
         # CHEQUEO
         imputable = df[best_col].isna() & (df[lift_cols] > 0).any(axis=1)
         
@@ -140,7 +140,7 @@ def sex_cleaner(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
-## LIMPIEZA DE SEXO
+## LIMPIEZA DE LEVANTAMIENTOS
 def lift_cleaner(df: pd.DataFrame, lifts: list = NEG_COLS) -> pd.DataFrame:
     """Convierte los valores negativos [fallos] de los lanzamientos en NaN para que se eliminen al filtrar."""
 

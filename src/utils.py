@@ -6,7 +6,9 @@ Funciones auxiliares genéricas reutilizables por el resto de módulos y comprob
 import numpy as np
 import pandas as pd
 
-# AUXILIAR DE AGE_IMPUTER
+# PARA LA LIMPIEZA
+
+## AUXILIAR DE AGE_IMPUTER
 def num_extractor(range_str: str, min_val: int = 14, max_val: int = 80) -> float:
     """
     Convierte los rangos de las 2 columnas alternativas de edad en un float con su media.
@@ -18,7 +20,7 @@ def num_extractor(range_str: str, min_val: int = 14, max_val: int = 80) -> float
 
     return float(np.clip(new_age, min_val, max_val))
 
-# IMPUTER DE EDAD
+## IMPUTER DE EDAD
 def age_imputer(fila: pd.Series) -> float:
     """
     Imputa la edad usando AgeClass o BirthYearClass si está disponible.
@@ -38,7 +40,7 @@ def age_imputer(fila: pd.Series) -> float:
         else:                                   # Sino, dame la media del intervalo
             return num_extractor(variable)
 
-# IMPUTER DE PESO
+## IMPUTER DE PESO
 def weight_imputer(fila: pd.Series) -> float:
     """Imputa el peso corporal usando WeightClassKg si está disponible."""
 
@@ -57,7 +59,7 @@ def weight_imputer(fila: pd.Series) -> float:
     
     return float(peso_limpio)                   # Si no, dame el número
 
-# IMPUTER DE MEJOR LEVANTAMIENTO
+## IMPUTER DE MEJOR LEVANTAMIENTO
 def best_imputer(lift1: float, lift2: float, lift3: float, best_lift: float) -> float:
     """Imputa el mejor levantamiento usando los 3 levantamientos si alguno de los 3 es válido."""
 
@@ -74,7 +76,7 @@ def best_imputer(lift1: float, lift2: float, lift3: float, best_lift: float) -> 
         else:                           # Sino, dame NaN
             return np.nan
 
-# IMPUTER DE TOTAL LEVANTADO
+## IMPUTER DE TOTAL LEVANTADO
 def total_imputer(bench: pd.Series, squat: pd.Series, deadlift: pd.Series, total_lift: pd.Series) -> float:
     """Imputa TotalKg sumando los 3 best lifts si los 3 están disponibles."""
 
@@ -86,7 +88,6 @@ def total_imputer(bench: pd.Series, squat: pd.Series, deadlift: pd.Series, total
     
     else:                                                                   # Sino, dame NaN
         return np.nan
-
 
 
 
