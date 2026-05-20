@@ -35,7 +35,7 @@ PLOT_RCPARAMS = {
 }
 
 # LISTAS DE COLUMNAS
-DROP_COLS = ['Country', 'State', 'MeetState', 'MeetTown', 'MeetCountry', 'Federation','ParentFederation', 'MeetName', 'Division', 'Sanctioned', 'Tested']
+DROP_COLS = ['Country', 'State', 'MeetState', 'MeetTown', 'MeetCountry', 'Federation','ParentFederation', 'MeetName', 'Division', 'Sanctioned', 'Tested', 'Wilks', 'Glossbrenner', 'Goodlift']
 
 CAT_COLS  = ['Sex', 'Event', 'Equipment', 'Place']
 

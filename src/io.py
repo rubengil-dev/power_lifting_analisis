@@ -7,7 +7,7 @@ import pandas as pd
 from pathlib import Path
 
 # CARGA DEL DF_RAW
-def load(path: str | Path) -> pd.DataFrame:
+def load(path: str | Path, low_memory: bool = False) -> pd.DataFrame:
     """Loads a CSV file into a DF."""
 
     return pd.read_csv(path)
