@@ -1,22 +1,27 @@
-from src.config import RAW_PATH, OUT_PATH
-from src.io import load_csv
-from src.cleaning import clean
-from src.features import build_features
-from src.utils import assert_columns
-from src.viz import plot_graph
+"""
+Gestor del proyecto. Lo corre end to end. La alternativa a este es chequear notebooks/eda.ipynb
+"""
+
+# IMPORTS
+from src.io import load, save
+from src import cleaning, features, viz, analysis
+from src.config import PLOT_THEME, PLOT_RCPARAMS, DISPLAY, DATA
 
 
 def main():
-    df = load_csv(RAW_PATH)
-    df = clean(df)
-    df = build_features(df)
-    # assert_columns(df, ['column_1', 'column_2'])
+    """Orquesta todo el proceso."""
+    
+    # CARGA DEL RAW_DF
+    df = load(DATA / "OPL_dataset.csv")
 
-    plot_graph(df)
+    # df = clean(df)
+    # df = build_features(df)
+    # # assert_columns(df, ['column_1', 'column_2'])
 
-    OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(OUT_PATH, index=False)
-    print(f"Saved: {OUT_PATH}")
+    # plot_graph(df)
+
+    # GUARDADO DEL CLEAN_DF
+    save(df, DATA / "clean_dataset.csv")
 
 
 if __name__ == "__main__":

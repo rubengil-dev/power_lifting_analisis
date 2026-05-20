@@ -1,3 +1,9 @@
+"""
+Constantes globales del proyecto: rutas, parámetros de display y configuración de gráficos.
+
+PD: Si deseas correr el proyecto de otra manera, puedes modificar las LISTAS DE COLUMNAS.
+"""
+
 # CONFIGURACIÓN DE RUTAS
 from pathlib import Path
 

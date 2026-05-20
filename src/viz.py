@@ -1,7 +1,11 @@
-import pandas as pd
-import numpy as np
+"""
+Funciones de visualización: gráficos de distribución y análisis.
+"""
+
+# IMPORTS
 import matplotlib.pyplot as plt
 import seaborn as sns
+from src.config import GRAPHS
 
 
 def plot_graph(df: pd.DataFrame) -> None:
