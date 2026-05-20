@@ -50,7 +50,12 @@ def weight_imputer(fila: pd.Series) -> float:
     if pd.isna(peso) or peso.startswith('-'):   # Si es NaN o un error [-NN], dame NaN
         return np.nan
     
-    return float(peso.rstrip('+'))              # Si no, dame el número a secas
+    peso_limpio = peso.rstrip('+').strip()      # Limpiamos
+    
+    if peso_limpio == '':                       # Si al limpiar se quedó vacío, devuelve NaN
+        return np.nan
+    
+    return float(peso_limpio)                   # Si no, dame el número
 
 # IMPUTER DE MEJOR LEVANTAMIENTO
 def best_imputer(lift1: float, lift2: float, lift3: float, best_lift: float) -> float:

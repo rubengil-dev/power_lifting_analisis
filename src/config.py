@@ -9,7 +9,7 @@ from pathlib import Path
 
 ROOT   = Path(__file__).resolve().parent.parent         # RAÍZ DEL PROYECTO
 DATA   = ROOT / "data"                                  # CARPETA DE CSV's
-GRAPHS = DATA / "output_graphs"                         # OUTPUT DE LOS GRÁFICOS
+GRAPHS = DATA / "output_graphs"                  # OUTPUT DE LOS GRÁFICOS
 
 # CONFIGURACIÓN DEL DISPLAY
 DISPLAY = {
@@ -40,3 +40,18 @@ DROP_COLS = ['Country', 'State', 'MeetState', 'MeetTown', 'MeetCountry', 'Federa
 CAT_COLS  = ['Sex', 'Event', 'Equipment', 'Place']
 
 NEG_COLS  = ['Bench1Kg', 'Bench2Kg', 'Bench3Kg', 'Bench4Kg', 'Squat1Kg', 'Squat2Kg', 'Squat3Kg', 'Squat4Kg', 'Deadlift1Kg', 'Deadlift2Kg', 'Deadlift3Kg', 'Deadlift4Kg']
+
+LIFT_COLS = [
+        ('Best3BenchKg',    ['Bench1Kg',    'Bench2Kg',    'Bench3Kg']),
+        ('Best3SquatKg',    ['Squat1Kg',    'Squat2Kg',    'Squat3Kg']),
+        ('Best3DeadliftKg', ['Deadlift1Kg', 'Deadlift2Kg', 'Deadlift3Kg']),
+    ]
+
+BOOL_COLS = [
+    ('Bench3Kg', 'Bench3bool'),
+    ('Squat3Kg', 'Squat3bool'),
+    ('Deadlift3Kg', 'Deadlift3bool'),
+    ('Bench4Kg', 'Bench4bool'),
+    ('Squat4Kg', 'Squat4bool'),
+    ('Deadlift4Kg', 'Deadlift4bool'),
+    ]
