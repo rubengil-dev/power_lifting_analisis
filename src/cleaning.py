@@ -27,6 +27,9 @@ def pre_filter(df: pd.DataFrame) -> pd.DataFrame:
     # ELIMINAR COLUMNAS INSERVIBLES
     df = df.drop(columns = DROP_COLS)
 
+    # ELIMINAR CATEGORÍAS INSERVIBLES
+    df['Place'  ] = df['Place'].cat.remove_unused_categories()
+
     return df
 
 # LIMPIEZA DE DUPLICADOS
@@ -38,7 +41,7 @@ def duplicates(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 # LIMPIEZA DE TIPOS
-def types(df: pd.DataFrame) -> pd.DataFrame:
+def fix_types(df: pd.DataFrame) -> pd.DataFrame:
     """
     Convierte las columnas a sus tipos correctos, pero lo hace solo sobre columnas definitivas.
     Es decir, columnas que vayan a ser eliminadas no se arreglan.
@@ -63,7 +66,7 @@ def age_cleaner(df: pd.DataFrame) -> pd.DataFrame:
     df['Age'] = df.apply(age_imputer, axis=1)
 
     # ELIMINA COLUMNAS
-    df = df.drop(columns=['AgeClass', 'BirthYearClass'])
+    df = df.drop(columns = ['AgeClass', 'BirthYearClass'])
 
     return df
 
@@ -75,7 +78,7 @@ def weight_cleaner(df: pd.DataFrame) -> pd.DataFrame:
     df['BodyweightKg'] = df.apply(weight_imputer, axis=1)
 
     # ELIMINA COLUMNA
-    df = df.drop(columns=['WeightClassKg'])
+    df = df.drop(columns = ['WeightClassKg'])
 
     return df
 

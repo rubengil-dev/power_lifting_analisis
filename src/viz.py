@@ -6,7 +6,11 @@ Funciones de visualización: gráficos de distribución y análisis.
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from .config import GRAPHS
+from .config import GRAPHS, PLOT_THEME, PLOT_RCPARAMS
+
+# CONFIG DE GRÁFICOS
+sns.set_theme(**PLOT_THEME)
+plt.rcParams.update(PLOT_RCPARAMS)
 
 # GRÁFICOS DE EXPLORACIÓN: Simplemente muestran la distribución de la variable indicada
 
@@ -106,7 +110,7 @@ def plot_evento(df: pd.DataFrame):
     plt.savefig(GRAPHS / "distribucion_evento.png", bbox_inches = 'tight')
     plt.close(fig)
 
-## FUNCIÓN CONTENEDORA DE EXPLORACIÓN
+## FUNCIÓN EXPLORACIÓN [ITSELF]
 def plot_full_explore(df: pd.DataFrame):
     """
     Ejecuta todas las visualizaciones de distribución del dataset para solo poner una función en el main.py.

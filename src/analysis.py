@@ -7,16 +7,20 @@ import pandas as pd
 import pingouin as pg
 from .viz import graficos1, graficos2, graficos3, graficos4, graficos5
 from .features import pseudo_dots
+from .utils import assert_nulls
 
 # PREGUNTA 1
 def pregunta1(df: pd.DataFrame):
     """Incluye toda la lógica para responder a la primera pregunta."""
-
+    
     # LIMPIEZA CONCRETA
     df1 = df.dropna(subset = ['Age', 'Dots'])
     df1 = df1[(df1['Age'] >= 14) & (df1['Age'] <= 80)]
     df1['Age'] = df1['Age'].round()
-
+    
+    # ASSERTS
+    assert_nulls(df1, 'Age', 'Dots')
+    
     # PLOT
     graficos1(df1)
 
@@ -81,6 +85,11 @@ def pregunta2(df: pd.DataFrame):
     squat_df = prepare_df2(df, 'Squat')
     deadlift_df = prepare_df2(df, 'Deadlift')
 
+    # ASSERTS
+    assert_nulls(bench_df, 'Peso', 'Intento')
+    assert_nulls(squat_df, 'Peso', 'Intento')
+    assert_nulls(deadlift_df, 'Peso', 'Intento')
+
     # ANÁLISIS
     bench_anova, bench_posthoc = analisis(bench_df)
     squat_anova, squat_posthoc = analisis(squat_df)
@@ -138,10 +147,16 @@ def fail_rate3(df: pd.DataFrame):
 def pregunta3(df: pd.DataFrame):
     """Incluye toda la lógica para responder a la tercera pregunta."""
 
+    # LIMPIEZA CONCRETA
     df3 = prepare_df3(df)
 
+    # ASSERTS
+    assert_nulls(df3, 'Exito', 'Levantamiento')
+
+    # FAIL RATE
     fail_global, fail_sex_df, fail_equip_df = fail_rate3(df3)
 
+    # PLOT
     graficos3(fail_global, fail_sex_df, fail_equip_df)
 
 # PREGUNTA 4
@@ -181,6 +196,9 @@ def pregunta4(df: pd.DataFrame):
     # NUEVAS COLUMNAS
     df4a = pseudo_dots(df4a)
 
+    # ASSERT
+    assert_nulls(df4a, 'Event', 'Dot_Bench', 'Dot_Squat', 'Dot_Deadlift')
+
     # SPLIT POR MODALIDAD
     bench_only_df, squat_only_df, deadlift_only_df = prepare_df4(df4a)
 
@@ -219,6 +237,9 @@ def pregunta5(df: pd.DataFrame):
 
     # LIMPIEZA CONCRETA
     df5 = prepare_df5(df)
+
+    # ASSERT
+    assert_nulls(df5, 'Exito', 'Levantamiento')
 
     # FAIL RATE
     df5 = fail_rate5(df5)

@@ -5,6 +5,7 @@ Funciones auxiliares genéricas reutilizables por el resto de módulos y comprob
 # IMPORTS
 import numpy as np
 import pandas as pd
+from .config import NEG_COLS, DROP_COLS, REQUIRED_COLS, EXPECTED_TYPES
 
 # PARA LA LIMPIEZA
 
@@ -89,10 +90,59 @@ def total_imputer(bench: pd.Series, squat: pd.Series, deadlift: pd.Series, total
     else:                                                                   # Sino, dame NaN
         return np.nan
 
+# ASSERTS
 
+## ASSERT SEXO
+def assert_sexo(columna: pd.Series):
+    
+    assert set(columna.cat.categories) == {'M', 'F'}, "El sexo mixto no se ha eliminado correctamente."
 
+## ASSERT PLACE
+def assert_place(columna: pd.Series):
+    
+    assert 'DD' not in columna.cat.categories and 'NS' not in columna.cat.categories, "La columna place sigue teniendo 'DD' o 'NS'."
 
-def assert_columns(df: pd.DataFrame, required: list[str]) -> None:
-    missing = [c for c in required if c not in df.columns]
-    if missing:
-        raise ValueError(f'Missing columns: {missing}')
+## ASSERT LEVANTAMIENTOS
+def assert_levantamientos(df: pd.DataFrame):
+    
+    for col in NEG_COLS:
+
+        assert all(df[col].dropna() > 0), f"La columna {col} aún tiene valores negativos o 0."
+
+## ASSERT COLUMNS
+def assert_required_cols(df: pd.DataFrame):
+    asserted_cols = REQUIRED_COLS
+    required_cols = [col for col in asserted_cols if col not in df.columns]
+    assert not required_cols, f"Las columnas: {required_cols} no se han encontrado."
+
+## ASSERT NO COLUMNS
+def assert_removed_cols(df: pd.DataFrame):
+    asserted_cols = DROP_COLS + ["AgeClass", "BirthYearClass", "WeightClassKg"]
+    removed_cols = [col for col in asserted_cols if col in df.columns]
+    assert not removed_cols, f"Las columnas: {removed_cols} no han sido eliminadas correctamente."
+
+## ASSERT TIPOS
+def assert_types(df: pd.DataFrame):
+
+    for col, exp_type in EXPECTED_TYPES.items():
+        now_type = str(df[col].dtype)
+        assert now_type == exp_type, f"{col}: esperado {exp_type}, tiene {now_type}"
+
+## ASSERT POR PREGUNTA ~ CHEQUEA LOS NULOS PARA ESA PREGUNTA CONCRETA
+def assert_nulls(df: pd.DataFrame, *cols: str):
+    """Comprueba que las columnas indicadas no tienen todos los valores a NaN."""
+
+    for col in cols:
+        assert df[col].notna().any(), f"La columna {col} está completamente vacía."
+
+## ASSERT GLOBAL [ITSELF]
+def global_assert(df: pd.DataFrame):
+    """Llama a todos los asserts necesarios para el check global."""
+
+    assert_sexo(df['Sex'])
+    assert_place(df['Place'])
+    assert_levantamientos(df)
+    assert_required_cols(df)
+    assert_removed_cols(df)
+    assert_types(df)
+

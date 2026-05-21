@@ -23,10 +23,8 @@ def bool_lift(df: pd.DataFrame) -> pd.DataFrame:
 def pseudo_dots(df: pd.DataFrame):
     """Crea variables de rendimiento relativas al peso corporal ~ Mi pseudo DOTS."""
 
-    df = df.copy()
+    df['Dot_Bench'] = df['Best3BenchKg'] / df['BodyweightKg']
+    df['Dot_Squat'] = df['Best3SquatKg'] / df['BodyweightKg']
+    df['Dot_Deadlift'] = df['Best3DeadliftKg'] / df['BodyweightKg']
 
-    df4['Dot_Bench'] = df4['Best3BenchKg'] / df4['BodyweightKg']
-    df4['Dot_Squat'] = df4['Best3SquatKg'] / df4['BodyweightKg']
-    df4['Dot_Deadlift'] = df4['Best3DeadliftKg'] / df4['BodyweightKg']
-
-    return df4
+    return df

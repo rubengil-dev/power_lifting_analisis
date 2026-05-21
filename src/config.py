@@ -41,6 +41,9 @@ CAT_COLS  = ['Sex', 'Event', 'Equipment', 'Place']
 
 NEG_COLS  = ['Bench1Kg', 'Bench2Kg', 'Bench3Kg', 'Bench4Kg', 'Squat1Kg', 'Squat2Kg', 'Squat3Kg', 'Squat4Kg', 'Deadlift1Kg', 'Deadlift2Kg', 'Deadlift3Kg', 'Deadlift4Kg']
 
+REQUIRED_COLS = ['Name', 'Age', 'BodyweightKg', 'Dots'] + CAT_COLS + NEG_COLS + ['Best3BenchKg', 'Best3SquatKg', 'Best3DeadliftKg', 'TotalKg', 'Bench3bool',
+                                                                                  'Squat3bool', 'Deadlift3bool', 'Bench4bool', 'Squat4bool', 'Deadlift4bool']
+
 LIFT_COLS = [
         ('Best3BenchKg',    ['Bench1Kg',    'Bench2Kg',    'Bench3Kg']),
         ('Best3SquatKg',    ['Squat1Kg',    'Squat2Kg',    'Squat3Kg']),
@@ -55,3 +58,36 @@ BOOL_COLS = [
     ('Squat4Kg', 'Squat4bool'),
     ('Deadlift4Kg', 'Deadlift4bool'),
     ]
+
+EXPECTED_TYPES = EXPECTED_TYPES = {
+    'Name'            : 'object',
+    'Age'             : 'float64',
+    'BodyweightKg'    : 'float64',
+    'Dots'            : 'float64',
+    'Sex'             : 'category',
+    'Event'           : 'category',
+    'Equipment'       : 'category',
+    'Place'           : 'category',
+    'Best3BenchKg'    : 'float64',
+    'Best3SquatKg'    : 'float64',
+    'Best3DeadliftKg' : 'float64',
+    'TotalKg'         : 'float64',
+    'Bench3bool'      : 'boolean',
+    'Squat3bool'      : 'boolean',
+    'Deadlift3bool'   : 'boolean',
+    'Bench4bool'      : 'boolean',
+    'Squat4bool'      : 'boolean',
+    'Deadlift4bool'   : 'boolean',
+    'Bench1Kg'        : 'float64',
+    'Bench2Kg'        : 'float64',
+    'Bench3Kg'        : 'float64',
+    'Bench4Kg'        : 'float64',
+    'Squat1Kg'        : 'float64',
+    'Squat2Kg'        : 'float64',
+    'Squat3Kg'        : 'float64',
+    'Squat4Kg'        : 'float64',
+    'Deadlift1Kg'     : 'float64',
+    'Deadlift2Kg'     : 'float64',
+    'Deadlift3Kg'     : 'float64',
+    'Deadlift4Kg'     : 'float64',
+}
