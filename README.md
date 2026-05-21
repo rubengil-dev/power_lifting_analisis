@@ -4,11 +4,9 @@
 Analizar el rendimiento de atletas de powerlifting en competiciones oficiales y bajo control antidopaje, respondiendo a 5 preguntas concretas sobre edad, progresión, fallos y especialización con la intención de obtener insights claros para apoyar la estrategia de los atletas durante la competición.
 
 ### 2) Dataset
-Para el proyecto utilicé el CSV open source de **Open PowerLifing**. Originalmente tiene ~ 3.9M filas y 42 columnas. Todas y cada una de las variables del dataset están definidas en `OPL_guide.txt` que va adjunto al proyecto (es el README.md de su proyecto). Lo descargué directamente en `data` con el nombre de `OPL_dataset.csv`. Lo podéis descargar en:
+Para el proyecto utilicé el CSV open source de **Open PowerLifing**. Originalmente tiene ~ 3.9M filas y 42 columnas. Todas y cada una de las variables del dataset están definidas en `OPL_guide.txt` que va adjunto al proyecto (es el README.md de su proyecto). Lo descargué directamente en `data` con el nombre de `OPL_dataset.csv`. Lo podéis descargar en: [Open Powerlifting](https://openpowerlifting.gitlab.io/opl-csv/bulk-csv.html).
 
-[text](https://openpowerlifting.gitlab.io/opl-csv/bulk-csv.html)
-
-Es el que se llama 'openpowerlifting-latest.zip' con un tamaño de 158Mb y 3925888 rows (en el momento que yo lo descargué [05/2026]). 
+Es el que se llama `openpowerlifting-latest.zip` con un tamaño de 158Mb y 3.925.888 rows (en el momento que yo lo descargué [05/2026]). 
 
 ### 3) Preguntas
 Las preguntas que quise responder fueron:
@@ -24,8 +22,8 @@ El principal problema del dataset es la gran cantidad de nulos que tiene en la m
 
 Otro gran problema del conjunto de datos es que los lanzamientos que intentan los atletas (es decir, existen), que han sido fallados, se apuntan como valores negativos. Estos valores son un problema porque desvirtuan la media y además, no aportan demasiada información más allá de que el levantamiento existe y que se ha fallado. Por eso, en el proceso de limpieza seguí el siguiente pipelane:
 
-    1. Cree unas columnas tipo `boolean` (para que gestionen NaN), donde registraba si el levantamiento había sido exitoso `True`, fallido `False`, o no se había realizado `NaN`. Lo hice solo para los 3 y 4 levantamiento de cada ejercicio, pues son los únicos que necesitaba para analizar.
-    2. Una vez creadas estas columnas (y no al revés), todos los valores de las columnas que registran levantamientos que eran 0 o negativas fueron transformadas a `NaN`. De esta manera al filtrar posteriormente para responder a las preguntas estos valores desaparecerían.
+1. Cree unas columnas tipo `boolean` (para que gestionen NaN), donde registraba si el levantamiento había sido exitoso `True`, fallido `False`, o no se había realizado `NaN`. Lo hice solo para los 3 y 4 levantamiento de cada ejercicio, pues son los únicos que necesitaba para analizar.
+2. Una vez creadas estas columnas (y no al revés), todos los valores de las columnas que registran levantamientos que eran 0 o negativas fueron transformadas a `NaN`. De esta manera al filtrar posteriormente para responder a las preguntas estos valores desaparecerían.
 
 A su vez, en el dataset original había 4 métricas de rendimiento Dots, Wilks, Glossbrenner y Goodlift. Finalmente me quedé solo con Dots, la más actual, y traté de imputarla con las otras pero no pude porque cuando Dots era NaN, las otras también. Al final, para responder a la pregunta 4 creo una métrica nueva, muy sencilla, para evaluar el rendimiento estandarizadamente sin tener en cuenta si los atletas hicieron uno o varios ejercicios. Comprobé que correlacionaba adecuadamente con Dots (r > 0.85).
 
@@ -37,25 +35,26 @@ Todo el proceso de limpieza previa se puede apreciar en `src/cleaning.py` y la l
 
 El pipelane se puede apreciar claramente en el `main.py`, pero básicamente fue el siguiente:
 
-    1. **Carga y pre-filtrado del df**: Antes si quiera de empezar la exploración, tras revisar `OPL_guide.txt`, reduje las dimensiones del df y filtré para quedarme solo con las columnas que usaría y datos de atletas en competiciones oficiales y anti-dopaje.
-    2. **Limpieza**: Consistió en eliminar duplicados absolutos, arreglar los tipos e imputar el máximo número de nulos posible (no eliminarlos).
-    3. *Feature* 1: Antes de terminar la limpieza tenía que crear las columnas booleanas o sino después sería imposible.
-    4. *Terminar* limpieza: Arreglé los negativos de las columnas de lanzamientos y eliminé las filas del sexto mixto dado su escaso número de datos (~100) y para facilitar el análisis.
-    5. *Asserts*: Comprobamos que toda la limpieza ha salido correctamente (negativos, columnas eliminadas y creadas...)
-    6. *Guardado* y exploración: La idea era guardar el dataset limpio y observar las 4 variables '_tag_' principales del dataset: Edad, Sexo, Tipo de evento (SBD) y Equipamiento permitido (sección 6 del `notebooks/eda.ipynb`).
-    7. *Análisis*: Este punto es el más largo, pues consta de 5 subpuntos donde, en cada uno, respondo a una de las preguntas y muestro sus gráficos (secciones 7 y 8 del `notebooks/eda.ipynb`).
+1. **Carga y pre-filtrado del df**: Antes si quiera de empezar la exploración, tras revisar `OPL_guide.txt`, reduje las dimensiones del df y filtré para quedarme solo con las columnas que usaría y datos de atletas en competiciones oficiales y anti-dopaje.
+2. **Limpieza**: Consistió en eliminar duplicados absolutos, arreglar los tipos e imputar el máximo número de nulos posible (no eliminarlos).
+3. *Feature* 1: Antes de terminar la limpieza tenía que crear las columnas booleanas o sino después sería imposible.
+4. *Terminar* limpieza: Arreglé los negativos de las columnas de lanzamientos y eliminé las filas del sexto mixto dado su escaso número de datos (~100) y para facilitar el análisis.
+5. *Asserts*: Comprobamos que toda la limpieza ha salido correctamente (negativos, columnas eliminadas y creadas...)
+6. *Guardado* y exploración: La idea era guardar el dataset limpio y observar las 4 variables '_tag_' principales del dataset: Edad, Sexo, Tipo de evento (SBD) y Equipamiento permitido (sección 6 del `notebooks/eda.ipynb`).
+7. *Análisis*: Este punto es el más largo, pues consta de 5 subpuntos donde, en cada uno, respondo a una de las preguntas y muestro sus gráficos (secciones 7 y 8 del `notebooks/eda.ipynb`).
 
 ### 6) Hallazgos
 
 - El mejor momento para un atleta de powerlifting llega en torno a los 22 años y se mantiene hasta los 24, a partir de los cuales empieza a decaer cada vez de forma más acelerada.
 
-- El press de banca es notablemente distinto al peso muerto y a la sentadilla, ya que es el único ejercicio donde se ve una clara mejora del rendimiento por especialización y es el único con una tasa de fallos al tercer intento mayor al 50%. Para sentadilla y peso muerto parece que la fuerza desarrollada en el resto de ejercicios es transferible y su tasa de fallo es mucho menor (~30%) [Conclusión a tomar con precaución dada la asimetría de los datos].
+- El press de banca es notablemente distinto al peso muerto y a la sentadilla, ya que es el único ejercicio donde se ve una clara mejora del rendimiento por especialización y es el único con una tasa de fallos al tercer intento mayor al 50%. Para sentadilla y peso muerto parece que la fuerza desarrollada en el resto de ejercicios es transferible y su tasa de fallo es mucho menor (~30%).
+[Conclusión a tomar con precaución dada la asimetría de los datos].
 
 - La tendencia de todos los atletas a superar su anterior levantamiento en el siguiente sugiere que el levantamiento más importante en la competición es el último. A su vez, el número de fallos en este último levantamiento es elevado, especialmente en banca. En conjunto, ambos datos pueden ayudar a diseñar una estrategia basada en arriesgar en el segundo levantamiento para ejercer presión sobre el resto de participantes.
 
 - Es recomendable a todos los atletas realizar el cuarto levantamiento, ya que al estar libre de presión, tiene una tasa de éxito del ~ 80% (a falta de comprobar que no haya sesgo de publicación). Esto es enormemente importante de cara a la preparación de próximas competiciones.
 
-- Nota extra: No se han apreciado diferencias por sexo en ninguna de las características estudiadas salvo, la obvia diferencia en cargas absolutas, que desaparece tras normalizar por peso.
+- **Nota extra**: No se han apreciado diferencias por sexo en ninguna de las características estudiadas salvo, la obvia diferencia en cargas absolutas, que desaparece tras normalizar por peso.
 
 De cara a un análisis futuro sería conveniente:
 
@@ -78,7 +77,7 @@ project/
 │   └── eda.ipynb                   # CUADERNO FULL PIPELANE
 ├── src/                            # MODULARIZACIÓN DEL PIPELANE
 │   ├── __init__.py
-│   ├── analysis.py                 # FUNCIOENS DE RESPUESTA A LAS 5 PREGUNTAS
+│   ├── analysis.py                 # FUNCIONES DE RESPUESTA A LAS 5 PREGUNTAS
 │   ├── cleaning.py                 # FUNCIONES DE LIMPIEZA
 │   ├── config.py                   # CONFIGURACIÓN
 │   ├── features.py                 # NUEVAS COLUMNAS
@@ -94,31 +93,31 @@ project/
 
 ### 8) Cómo ejecutar
 
-1. PASO 1 ~ DESCARGAR EL DATASET
+**1. PASO 1 ~ DESCARGAR EL DATASET**
 
-    1. Ir a [text](https://openpowerlifting.gitlab.io/opl-csv/bulk-csv.html) y descargar el FULL DATASET.
-    2. Ponerlo en la carpeta `data`.
-    3. [Opción A ~ Recomendada] Cambiar el nombe a `OPL_dataset.csv` (copy-paste).
-    4. [Opción B] **Si decides no cambiar el nombre**, debes:
-        I. En el archivo `main.py`, cambia la línea 23:
-        ```python
-        # LINEA ACTUAL
-        df = load(DATA / "OPL_dataset.csv")
+  I. Ir a [text](https://openpowerlifting.gitlab.io/opl-csv/bulk-csv.html) y descargar el FULL DATASET.
+ II. Ponerlo en la carpeta `data`.
+III. **[Opción A ~ Recomendada]** Cambiar el nombe a `OPL_dataset.csv` (copy-paste).
+ IV. [Opción B] **Si decides no cambiar el nombre**, debes:
+- En el archivo `main.py`, cambia la línea 23:
+```python
+# LINEA ACTUAL
+df = load(DATA / "OPL_dataset.csv")
 
-        # TU LINEA
-        df = load(DATA / "tu_nombre_archivo.csv")
-        ```
+# TU LINEA
+df = load(DATA / "tu_nombre_archivo.csv")
+```
 
-        II. En el notebooks/eda.ipynb cambia la sección de CARGA:
-        ```python
-        # LINEA ACTUAL
-                opl_df = pd.read_csv('../data/OPL_dataset.csv', low_memory = False)
+- En el notebooks/eda.ipynb cambia la sección de CARGA:
+```python
+# LINEA ACTUAL
+        opl_df = pd.read_csv('../data/OPL_dataset.csv', low_memory = False)
 
-        # TU LINEA
-                opl_df = pd.read_csv('../data/tu_nombre_archivo.csv', low_memory = False)
-        ```
+# TU LINEA
+        opl_df = pd.read_csv('../data/tu_nombre_archivo.csv', low_memory = False)
+```
 
-2. PASO 2 ~ CREAR, ACTIVAR, Y PREPARAR EL ENTORNO
+**2. PASO 2 ~ CREAR, ACTIVAR, Y PREPARAR EL ENTORNO**
 
 El siguiente bloque de código debe ser escrito POR PASOS (línas de 1 en 1), en la terminal de tu ordenador.
 
@@ -139,9 +138,11 @@ python -m venv .venv
 
 pip install -r requirements.txt
 ```
-3. PASO 3 ~ EJECUTAR EL PROYECTO
+**3. PASO 3 ~ EJECUTAR EL PROYECTO**
 ```PowerShell
 python main.py
 ```
+
 PD1: También puedes ejecutar y ver el notebook para mayor claridad y explicaciones :)
+
 PD2: Tarda un poquito porque las operaciones no están del todo optimizadas :)
