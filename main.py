@@ -1,5 +1,5 @@
 """
-Gestor del proyecto. Lo corre end to end. La alternativa a este es chequear notebooks/eda.ipynb
+Project manager that runs it end to end. You can check notebooks/eda.ipynb for an alternative look.
 """
 
 # IMPORTS
@@ -9,71 +9,71 @@ from src.features import bool_lift
 from src.utils import global_assert
 from src.cleaning import pre_filter, duplicates, fix_types, null_imputer, fix_data
 from src.viz import plot_full_explore
-from src.analysis import pregunta1, pregunta2, pregunta3, pregunta4, pregunta5
-
+from src.analysis import question1, question2, question3, question4, question5
 
 
 def main():
-    """Orquesta todo el proceso."""
+    """Manages whole project"""
 
-    # CONFIG DEL DISPLAY
+    # CONFIG DISPLAY
     pd_display()
 
-    # SET UP ~ CARGA DEL RAW_DF + PRE-FILTRADO
-    print("Cargando el dataset...")
+    # SET UP ~ DOWNLAD + PRE-FILTER
+    print("Loading DataSet...")
     df = load(DATA / "OPL_dataset.csv")
     df = pre_filter(df)
 
-    # PRIMERA LIMPIEZA
-    print("Eliminando duplicados...")
-    df = duplicates(df)     # DUPLICADOS
+    # FIRST CLEANING
+    print("Deleting duplicates...")
+    df = duplicates(df)
 
-    print("Arreglando tipos...")
-    df = fix_types(df)      # TIPOS
+    print("Casting types...")
+    df = fix_types(df)
 
-    print("Imputando datos...")
-    df = null_imputer(df)   # NULOS
+    print("Imputing data...")
+    df = null_imputer(df)
 
-    # PRIMERA FEATURE ~ SINO LLEVA ESTE ORDEN, LA FEATURE SE ROMPE
-    print("Creando primera feature...")
+    # FEATURE
+    print("Creating features...")
     df = bool_lift(df)
 
-    # TERMINAR LIMPIEZA
-    print("Terminando la limpieza...")
+    # SECOND CLEANING
+    print("Finish cleaning...")
     df = fix_data(df)
 
-    # GUARDADO DEL CLEAN_DF
-    print("Guardado el DF limpio...")
+    # SAVING CLEANED DF
+    print("Saving cleaned DataFrame...")
     save(df, DATA / "clean_dataset.csv")
 
     # ASSERTS
-    print("Asegurando que la limpieza ha salido correctamente...")
+    print("Asserting cleaning was succesful...")
     global_assert(df)
 
-    # VISTAZO A LOS DATOS
-    print("Creando gráficos para la exploración inicial...")
-    GRAPHS.mkdir(parents = True, exist_ok = True)
+    # DATA EXPLORATION
+    print("Creating graphs for initial exploration...")
+    GRAPHS.mkdir(parents=True, exist_ok=True)
     plot_full_explore(df)
-    
-    # PREGUNTA 1
-    print("Resolviendo pregunta 1...")
-    pregunta1(df)
 
-    # PREGUNTA 2
-    print("Resolviendo pregunta 2...")
-    pregunta2(df)
+    # QUESTION 1
+    print("Answering question 1...")
+    question1(df)
 
-    # PREGUNTA 3
-    print("Resolviendo pregunta 3...")
-    pregunta3(df)
+    # QUESTION 2
+    print("Answering question 2...")
+    question2(df)
 
-    # PREGUNTA 4
-    print("Resolviendo pregunta 4...")
-    pregunta4(df)
+    # QUESTION 3
+    print("Answering question 3...")
+    question3(df)
 
-    # PREGUNTA 5
-    print("Resolviendo pregunta 5...")
-    pregunta5(df)
+    # QUESTION 4
+    print("Answering question 4...")
+    question4(df)
+
+    # QUESTION 5
+    print("Answering question 5...")
+    question5(df)
+
 
 # NO CALLABLE
 if __name__ == "__main__":

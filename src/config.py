@@ -1,24 +1,24 @@
 """
-Constantes globales del proyecto: rutas, parámetros de display y configuración de gráficos.
+Global project constants: paths, display parameters, and plot configurations.
 
-PD: Si deseas correr el proyecto de otra manera, puedes modificar las LISTAS DE COLUMNAS.
+PS: If you want to run the project differently, you can modify the COLUMN LISTS.
 """
 
-# CONFIGURACIÓN DE RUTAS
+# PATHS CONFIG
 from pathlib import Path
 
-ROOT   = Path(__file__).resolve().parent.parent         # RAÍZ DEL PROYECTO
-DATA   = ROOT / "data"                                  # CARPETA DE CSV's
-GRAPHS = DATA / "output_graphs"                  # OUTPUT DE LOS GRÁFICOS
+ROOT   = Path(__file__).resolve().parent.parent         # PROJECT ROOT
+DATA   = ROOT / "data"                                  # CSV's FOLDER
+GRAPHS = DATA / "output_graphs"                         # GRAPHS' OUTPUT
 
-# CONFIGURACIÓN DEL DISPLAY
+# DISPLAY CONFIG
 DISPLAY = {
     "display.max_columns": None,
     "display.width": None,
     "display.float_format": "{:.2f}".format,
 }
 
-# CONFIGURACIÓN DE GRÁFICOS
+# GRAPHS CONFIG
 PLOT_THEME   = {"style": "white", "palette": "muted"}
 
 PLOT_RCPARAMS = {
@@ -34,7 +34,7 @@ PLOT_RCPARAMS = {
     "legend.frameon": True,
 }
 
-# LISTAS DE COLUMNAS
+# COLUMNS LISTS
 DROP_COLS = ['Country', 'State', 'MeetState', 'MeetTown', 'MeetCountry', 'Federation','ParentFederation', 'MeetName', 'Division', 'Sanctioned', 'Tested', 'Wilks', 'Glossbrenner', 'Goodlift']
 
 CAT_COLS  = ['Sex', 'Event', 'Equipment', 'Place']

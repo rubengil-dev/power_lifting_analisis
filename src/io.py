@@ -1,5 +1,5 @@
 """
-Funciones de entrada y salida de datos: carga y guardado de DataFrames.
+Uploading and saving data functions.
 """
 
 # IMPORTS
@@ -7,20 +7,20 @@ import pandas as pd
 from pathlib import Path
 from .config import DISPLAY
 
-# SET-UP DE LOS DISPLAY DE PD
+# PANDAS DISPLAY SET-UP
 def pd_display():
-    """Configura los display para que se vean todas las columnas sin ancho máximo."""
+    """Configure display settings to show all columns with no maximum width."""
 
     for key, value in DISPLAY.items():
         pd.set_option(key, value)
 
-# CARGA DEL DF_RAW
+# RAW UPLOAD
 def load(path: str | Path) -> pd.DataFrame:
     """Loads a CSV file into a DF."""
 
     return pd.read_csv(path, low_memory = False)
 
-# GUARDADO DEL DF_CLEAN
+# CLEAN SAVE
 def save(df: pd.DataFrame, path: str | Path) -> None:
     """Saves a DF into a CSV file."""
     

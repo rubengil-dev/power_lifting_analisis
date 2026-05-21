@@ -1,5 +1,5 @@
 """
-Funciones de limpieza del dataset: duplicados, tipos, nulos y valores inválidos.
+Dataset cleaning functions: duplicates, types, nulls, and invalid values.
 """
 
 # IMPORTS
@@ -8,88 +8,88 @@ import pandas as pd
 from .config import DROP_COLS, CAT_COLS, NEG_COLS, LIFT_COLS
 from .utils import age_imputer, weight_imputer, best_imputer, total_imputer
 
-# PRE-FILTRO INICIAL
+# INITIAL PRE-FILTER
 def pre_filter(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Aplica el filtro de criterio y elimina las columnas que no vamos a analizar:
-        1. Sólo analizamos competiciones oficiales.
-        2. Sólo analizamos competiciones bajo test anti-dopaje.
-        3. Sólo se admite al atleta si no fue descalificado en dicha participación.
+    Apply filtering criteria and drop columns that will not be analyzed:
+        1. Only analyze official competitions.
+        2. Only analyze drug-tested competitions.
+        3. Only include the athlete if they were not disqualified in that specific event.
     """
 
-    # FILTRAR
+    # FILTER
     df = df[
         (df['Sanctioned'] == 'Yes') & 
         (df['Tested'] == 'Yes') & 
         (df['Place'] != 'DD') & 
         (df['Place'] != 'NS')]
     
-    # ELIMINAR COLUMNAS INSERVIBLES
+    # DELETE USELESS COLUMNS
     df = df.drop(columns = DROP_COLS)
 
     return df
 
-# LIMPIEZA DE DUPLICADOS
+# DUPLICATES REMOVAL
 def duplicates(df: pd.DataFrame) -> pd.DataFrame:
-    """Elimina duplicados absolutos"""
+    """Removes absolute duplicates."""
 
     df = df.drop_duplicates()
     
     return df
 
-# LIMPIEZA DE TIPOS
+# TYPE CASTING
 def fix_types(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Convierte las columnas a sus tipos correctos, pero lo hace solo sobre columnas definitivas.
-    Es decir, columnas que vayan a ser eliminadas no se arreglan.
-    Arreglos actuales: Sex -> [Cat], Event -> [Cat], Equipment -> [Cat], Date -> [Date]. 
+    Convert columns to their correct data types, but only for final columns.
+    Columns scheduled to be dropped are ignored.
+    Current fixes: Sex -> [Cat], Event -> [Cat], Equipment -> [Cat], Date -> [Date].
     """
 
-    # CATEGÓRICAS
+    # CATEGORIES
     df[CAT_COLS] = df[CAT_COLS].astype('category')
     
-    # ELIMINAR CATEGORÍAS INSERVIBLES
-    df['Place'  ] = df['Place'].cat.remove_unused_categories()
+    # DELETE USELESS CATEGORIES
+    df['Place'] = df['Place'].cat.remove_unused_categories()
 
-    # FECHAS
+    # DATES
     df['Date'] = pd.to_datetime(df['Date'])
 
     return df
 
-# LIMPIEZA DE NULOS
+# NULL CLEANING
 
-## LIMPIEZA DE EDAD
+## AGE CLEANING
 def age_cleaner(df: pd.DataFrame) -> pd.DataFrame:
-    """Utiliza age_imputer para imputar la edad y después elimina las columnas con las que se ha imputado."""
+    """Use age_imputer to impute the age and then drop the columns used for the imputation."""
 
-    # LIMPIA EDAD
+    # AGE CLEANING ITSELF
     df['Age'] = df.apply(age_imputer, axis=1)
 
-    # ELIMINA COLUMNAS
+    # REMOVING USED COLUMNS
     df = df.drop(columns = ['AgeClass', 'BirthYearClass'])
 
     return df
 
-## LIMPIEZA DE PESO
+## WEIGHT CLEANER
 def weight_cleaner(df: pd.DataFrame) -> pd.DataFrame:
-    """Utiliza weight_imputer para imputar el peso y después elimina la columna con las que se ha imputado."""
+    """Use weight_imputer to impute the weight and then drop the column used for the imputation."""
 
-    # LIMPIA PESO
+    # WEIGHT CLEANING ITSELF
     df['BodyweightKg'] = df.apply(weight_imputer, axis=1)
 
-    # ELIMINA COLUMNA
+    # REMOVING USED COLUMN
     df = df.drop(columns = ['WeightClassKg'])
 
     return df
 
-## LIMPIEZA DE MEJOR LEVANTAMIENTO
+## BEST LIFT CLEANER
 def best_cleaner(df: pd.DataFrame) -> pd.DataFrame:
-    """Imputa nulos en Best3Kg usando el máximo de los 3 intentos válidos (mayores que 0) después de chequearlo."""
+    """Impute nulls in Best3Kg using the maximum of the 3 valid attempts (greater than 0) after checking."""
     
-    # COLS A CHEQUEAR
+    # COLS TO CHECK
     for best_col, lift_cols in LIFT_COLS:
 
-        # CHEQUEO
+        # CHECK
         imputable = df[best_col].isna() & (df[lift_cols] > 0).any(axis=1)
         
         # SI HAY ALGO QUE IMPUTAR, IMPUTA
@@ -106,20 +106,20 @@ def best_cleaner(df: pd.DataFrame) -> pd.DataFrame:
     
     return df
 
-## LIMPIEZA DE TOTAL LEVANTADO
+## TOTAL LIFTED CLEANING
 def total_cleaner(df: pd.DataFrame) -> pd.DataFrame:
-    """Imputa nulos en TotalKg sumando los 3 best lifts."""
+    """Impute nulls in TotalKg by summing the 3 best lifts."""
 
     df['TotalKg'] = df.apply(lambda f: total_imputer(f['Best3BenchKg'], f['Best3SquatKg'], f['Best3DeadliftKg'], f['TotalKg']), axis=1)
 
     return df
 
-# FINALMENTE, LA FUNCIÓN QUE IMPUTA TODOS LOS NULOS A LA VEZ
+# FULL-IMPUTING FUNCTION
 def null_imputer(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Esta función no limpia TODOS los nulos. Imputa lo que puede a partir de los datos del DF.
-    
-    DATOS IMPUTADOS: Edad, Peso, Mejor levantamiento y Levantamiento total.
+    This function does not clean ALL nulls. It imputes what it can based on the dataframe data.
+
+    IMPUTED DATA: Age, Weight, Best lift, and Total lift.
     """
 
     df = age_cleaner(df)
@@ -129,35 +129,35 @@ def null_imputer(df: pd.DataFrame) -> pd.DataFrame:
     
     return df
 
-# LIMPIEZA DE VALORES EN LOS DATOS
+# DATA CLEANING
 
-## LIMPIEZA DE SEXO
+## SEX CLEANING
 def sex_cleaner(df: pd.DataFrame) -> pd.DataFrame:
-    """Filtra el DF para eliminar el sexo mixto y borra dicha categoría"""
+    """Filter the DF to remove mixed sex and drop that category."""
 
-    # FILTRO
-    df = df[df['Sex'] != 'Mx'].copy()         # El .copy es para prevenir 'SettingWithCopyWarning'
+    # FILTER
+    df = df[df['Sex'] != 'Mx'].copy()         # .copy is to prevent 'SettingWithCopyWarning'
 
-    # ELIMINAR CATEGORÍA
+    # REMOVING FILTERED CATEGORY
     df['Sex'] = df['Sex'].cat.remove_unused_categories()
 
     return df
 
-## LIMPIEZA DE LEVANTAMIENTOS
+## LIFTS CLEANING
 def lift_cleaner(df: pd.DataFrame, lifts: list = NEG_COLS) -> pd.DataFrame:
-    """Convierte los valores negativos [fallos] de los lanzamientos en NaN para que se eliminen al filtrar."""
+    """Convert negative values [misses] of the lifts into NaN so they are removed during filtering."""
 
     for lift in lifts:
         df.loc[df[lift] <= 0, lift] = np.nan
 
     return df
 
-# FINALMENTE, LA FUNCIÓN QUE LIMPIA TODOS LOS VALORES A LA VEZ
+# FULL-CLEANING FUNCTION
 def fix_data(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Esta función arregla TODOS los valores que carecen de sentido en el DF.
+    This function fixes ALL nonsense values in the DF.
 
-    DATOS LIMPIADOS: Sexo mixto y valores negativos en los levantamientos.
+    CLEANED DATA: Mixed sex and negative values in the lifts.
     """
 
     df = sex_cleaner(df)
