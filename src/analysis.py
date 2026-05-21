@@ -182,7 +182,7 @@ def fail_rate4(df: pd.DataFrame):
         value_name = 'Exito'
         )
 
-    df4b = df4b.groupby(['Levantamiento', 'Event'])['Exito'].apply(lambda x: (x == False).sum() / x.dropna().count() * 100).reset_index(name = 'FailRate')
+    df4b = df4b.groupby(['Levantamiento', 'Event'])['Exito'].apply(lambda x: (x == False).sum() / x.dropna().count() * 100 if x.dropna().count() > 0 else np.nan).reset_index(name = 'FailRate')
     
     return df4b[df4b['FailRate'] > 0]
 

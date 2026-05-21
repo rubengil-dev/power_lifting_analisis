@@ -27,9 +27,6 @@ def pre_filter(df: pd.DataFrame) -> pd.DataFrame:
     # ELIMINAR COLUMNAS INSERVIBLES
     df = df.drop(columns = DROP_COLS)
 
-    # ELIMINAR CATEGORÍAS INSERVIBLES
-    df['Place'  ] = df['Place'].cat.remove_unused_categories()
-
     return df
 
 # LIMPIEZA DE DUPLICADOS
@@ -50,6 +47,9 @@ def fix_types(df: pd.DataFrame) -> pd.DataFrame:
 
     # CATEGÓRICAS
     df[CAT_COLS] = df[CAT_COLS].astype('category')
+    
+    # ELIMINAR CATEGORÍAS INSERVIBLES
+    df['Place'  ] = df['Place'].cat.remove_unused_categories()
 
     # FECHAS
     df['Date'] = pd.to_datetime(df['Date'])

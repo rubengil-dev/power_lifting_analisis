@@ -59,7 +59,7 @@ BOOL_COLS = [
     ('Deadlift4Kg', 'Deadlift4bool'),
     ]
 
-EXPECTED_TYPES = EXPECTED_TYPES = {
+EXPECTED_TYPES = {
     'Name'            : 'object',
     'Age'             : 'float64',
     'BodyweightKg'    : 'float64',

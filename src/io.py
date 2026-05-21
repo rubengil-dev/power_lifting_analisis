@@ -18,7 +18,7 @@ def pd_display():
 def load(path: str | Path) -> pd.DataFrame:
     """Loads a CSV file into a DF."""
 
-    return pd.read_csv(path, low_memory = False)
+    return pd.read_csv(path, index = False, low_memory = False)
 
 # GUARDADO DEL DF_CLEAN
 def save(df: pd.DataFrame, path: str | Path) -> None:
