@@ -5,8 +5,8 @@ Funciones de limpieza del dataset: duplicados, tipos, nulos y valores inválidos
 # IMPORTS
 import numpy as np
 import pandas as pd
-from config import DROP_COLS, CAT_COLS, NEG_COLS, LIFT_COLS
-from src.utils import age_imputer, weight_imputer, best_imputer, total_imputer
+from .config import DROP_COLS, CAT_COLS, NEG_COLS, LIFT_COLS
+from .utils import age_imputer, weight_imputer, best_imputer, total_imputer
 
 # PRE-FILTRO INICIAL
 def pre_filter(df: pd.DataFrame) -> pd.DataFrame:

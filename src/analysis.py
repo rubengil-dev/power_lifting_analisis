@@ -5,7 +5,8 @@ Modularización de la respuesta a las 5 preguntas del proyecto. De esta manera e
 # IMPORTS
 import pandas as pd
 import pingouin as pg
-from src.viz import graficos1, graficos2, graficos3, graficos4, graficos5
+from .viz import graficos1, graficos2, graficos3, graficos4, graficos5
+from .features import pseudo_dots
 
 # PREGUNTA 1
 def pregunta1(df: pd.DataFrame):
@@ -14,12 +15,12 @@ def pregunta1(df: pd.DataFrame):
     # LIMPIEZA CONCRETA
     df1 = df.dropna(subset = ['Age', 'Dots'])
     df1 = df1[(df1['Age'] >= 14) & (df1['Age'] <= 80)]
-    df1['Age'] = df1['Age'].round().copy()
+    df1['Age'] = df1['Age'].round()
 
     # PLOT
     graficos1(df1)
 
-# PREGUTNA 2
+# PREGUNTA 2
 
 ## PREPARACIÓN DEL DF PARA EL ANÁLISIS ESTADÍSTICO
 def prepare_df2(df: pd.DataFrame, lift: str):
@@ -33,7 +34,7 @@ def prepare_df2(df: pd.DataFrame, lift: str):
     df2 = df2.reset_index(drop=True)
     df2['Idx'] = df2.index
 
-    # TRANSFORMACIÓN PARA ANOVA
+    # DF ANCHO -> DF LARGO
     df2 = df2.melt(
         id_vars=['Name', 'Sex', 'Idx'],
         value_vars = cols,
@@ -44,7 +45,7 @@ def prepare_df2(df: pd.DataFrame, lift: str):
     return df2
 
 ## ANÁLISIS ESTADÍSTICO: ANOVA + POST-HOC
-def analisis(df):
+def analisis(df: pd.DataFrame):
 
     # ANOVA
     anova = pg.rm_anova(
@@ -71,7 +72,7 @@ def analisis(df):
     return anova, posthoc
 
 
-## PREGUTNA 2 [ITSELF]
+## PREGUNTA 2 [ITSELF]
 def pregunta2(df: pd.DataFrame):
     """Incluye toda la lógica para responder a la segunda pregunta."""
 
@@ -98,20 +99,129 @@ def pregunta2(df: pd.DataFrame):
     print(deadlift_anova)
     print(deadlift_posthoc)
 
+    # PLOT
     graficos2(bench_df, squat_df, deadlift_df)
 
+# PREGUNTA 3
+
+## PREPARACIÓN DEL DF
+def prepare_df3(df: pd.DataFrame):
+    """Pasa el df a formato largo y luego limpia."""
+
+    # DF ANCHO -> DF LARGO
+    df3 = df.melt(
+        id_vars = ['Name', 'Sex', 'Equipment'],
+        value_vars = ['Bench3bool', 'Squat3bool', 'Deadlift3bool'],
+        var_name = 'Levantamiento',
+        value_name = 'Exito'
+    )
+
+    # LIMPIEZA CONCRETA
+    return df3.dropna(subset = ['Exito'])
+
+## NORMALIZAR FALLOS POR LEVANTAMIENTOS TOTALES
+def fail_rate3(df: pd.DataFrame):
+    """Calcula en 2 df diferentes el %Fallos sobre los levantamientos totales."""
+
+    # GLOBAL
+    fail_global = df.groupby('Levantamiento')['Exito'].apply(lambda x: (x == False).mean() * 100).reset_index(name = 'FailRate')
+    
+    # POR SEXO
+    fail_sex_df = df.groupby(['Levantamiento', 'Sex'])['Exito'].apply(lambda x: (x == False).mean() * 100).reset_index(name = 'FailRate')
+
+    # POR EQUIPO
+    fail_equip_df = df.groupby(['Levantamiento', 'Equipment'])['Exito'].apply(lambda x: (x == False).mean() * 100).reset_index(name = 'FailRate')
+
+    return fail_global, fail_sex_df, fail_equip_df
+
+## PREGUNTA 3 [ITSELF]
 def pregunta3(df: pd.DataFrame):
     """Incluye toda la lógica para responder a la tercera pregunta."""
 
-    return
+    df3 = prepare_df3(df)
 
+    fail_global, fail_sex_df, fail_equip_df = fail_rate3(df3)
+
+    graficos3(fail_global, fail_sex_df, fail_equip_df)
+
+# PREGUNTA 4
+
+## PREPARACIÓN DEL DF
+def prepare_df4(df: pd.DataFrame):
+    """Divide el dataset por modalidad."""
+
+    bench_only_df = df[~df['Event'].isin(['D', 'S', 'SD'])].dropna(subset = ['Best3BenchKg']).copy()
+    squat_only_df = df[~df['Event'].isin(['D', 'B', 'BD'])].dropna(subset = ['Best3SquatKg']).copy()
+    deadlift_only_df = df[~df['Event'].isin(['B', 'S', 'SB'])].dropna(subset = ['Best3DeadliftKg']).copy()
+
+    return bench_only_df, squat_only_df, deadlift_only_df
+
+## NORMALIZAR FALLOS POR LEVANTAMIENTOS TOTALES
+def fail_rate4(df: pd.DataFrame):
+    """Calcula el %Fallos por tipo de evento (SBD) sobre los levantamientos totales."""
+
+    df4b = df.melt(
+        id_vars = ['Name', 'Event'],
+        value_vars = ['Bench3bool', 'Squat3bool', 'Deadlift3bool'],
+        var_name = 'Levantamiento',
+        value_name = 'Exito'
+        )
+
+    df4b = df4b.groupby(['Levantamiento', 'Event'])['Exito'].apply(lambda x: (x == False).sum() / x.dropna().count() * 100).reset_index(name = 'FailRate')
+    
+    return df4b[df4b['FailRate'] > 0]
+
+## PREGUNTA 4 [ITSELF]
 def pregunta4(df: pd.DataFrame):
     """Incluye toda la lógica para responder a la cuarta pregunta."""
 
-    return
+    # LIMPIEZA CONCRETA
+    df4a = df.dropna(subset=['Event']).copy()
 
+    # NUEVAS COLUMNAS
+    df4a = pseudo_dots(df4a)
+
+    # SPLIT POR MODALIDAD
+    bench_only_df, squat_only_df, deadlift_only_df = prepare_df4(df4a)
+
+    # FAIL RATE
+    df4b = fail_rate4(df4a)
+
+    # PLOT
+    graficos4(bench_only_df, squat_only_df, deadlift_only_df, df4b)
+
+# PREGUNTA 5
+
+## PREPARACIÓN DEL DF
+def prepare_df5(df: pd.DataFrame):
+    """Pasa el df a formato largo para analizar éxito del 4º intento."""
+
+    df5 = df.melt(
+        id_vars=['Sex'],
+        value_vars=['Bench4bool', 'Squat4bool', 'Deadlift4bool'],
+        var_name='Levantamiento',
+        value_name='Exito'
+    )
+
+    return df5.dropna(subset = ['Exito'])
+
+## NORMALIZAR FALLOS POR LEVANTAMIENTOS TOTALES
+def fail_rate5(df: pd.DataFrame):
+    """Calcula % de éxito por levantamiento y sexo."""
+
+    df5 = df.groupby(['Levantamiento', 'Sex'])['Exito'].apply(lambda x: (x == True).sum() / x.dropna().count() * 100).reset_index(name = 'SuccessRate')
+    
+    return df5
+
+## PREGUNTA 5 [ITSELF]
 def pregunta5(df: pd.DataFrame):
     """Incluye toda la lógica para responder a la quinta pregunta."""
 
-    return
+    # LIMPIEZA CONCRETA
+    df5 = prepare_df5(df)
 
+    # FAIL RATE
+    df5 = fail_rate5(df5)
+
+    # PLOT
+    graficos5(df5)
