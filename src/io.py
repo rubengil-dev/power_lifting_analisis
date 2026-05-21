@@ -5,6 +5,7 @@ Funciones de entrada y salida de datos: carga y guardado de DataFrames.
 # IMPORTS
 import pandas as pd
 from pathlib import Path
+from .config import DISPLAY
 
 # SET-UP DE LOS DISPLAY DE PD
 def pd_display():

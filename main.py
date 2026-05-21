@@ -37,12 +37,12 @@ def main():
     # GUARDADO DEL CLEAN_DF
     save(df, DATA / "clean_dataset.csv")
 
+    # ASSERTS
+    global_assert(df)
+
     # VISTAZO A LOS DATOS
     GRAPHS.mkdir(parents = True, exist_ok = True)
     plot_full_explore(df)
-
-    # ASSERTS
-    global_assert(df)
     
     # PREGUNTA 1
     pregunta1(df)
