@@ -6,11 +6,14 @@ Funciones de visualización: gráficos de distribución y análisis.
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import warnings
 from .config import GRAPHS, PLOT_THEME, PLOT_RCPARAMS
+
 
 # CONFIG DE GRÁFICOS
 sns.set_theme(**PLOT_THEME)
 plt.rcParams.update(PLOT_RCPARAMS)
+warnings.filterwarnings('ignore', category = FutureWarning)
 
 # GRÁFICOS DE EXPLORACIÓN: Simplemente muestran la distribución de la variable indicada
 

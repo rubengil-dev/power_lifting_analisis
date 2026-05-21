@@ -60,7 +60,7 @@ BOOL_COLS = [
     ]
 
 EXPECTED_TYPES = {
-    'Name'            : 'object',
+    'Name'            : 'str',
     'Age'             : 'float64',
     'BodyweightKg'    : 'float64',
     'Dots'            : 'float64',

@@ -4,6 +4,7 @@ Modularización de la respuesta a las 5 preguntas del proyecto. De esta manera e
 
 # IMPORTS
 import pandas as pd
+import numpy as np
 import pingouin as pg
 from .viz import graficos1, graficos2, graficos3, graficos4, graficos5
 from .features import pseudo_dots
