@@ -143,4 +143,5 @@ pip install -r requirements.txt
 ```PowerShell
 python main.py
 ```
-PD: También puedes ejecutar y ver el notebook para mayor claridad y explicaciones :)
+PD1: También puedes ejecutar y ver el notebook para mayor claridad y explicaciones :)
+PD2: Tarda un poquito porque las operaciones no están del todo optimizadas :)
