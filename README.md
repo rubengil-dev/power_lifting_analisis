@@ -78,8 +78,8 @@ project/
 │   ├── clean_dataset.csv               # CLEAN
 │   └── OPL_dataset.csv                 # RAW
 ├── notebooks/
-│   └── eda.ipynb                   # FULL-PIPELANE INDEPENDENT NOTEBOOK
-├── src/                            # PIPELANE MODULARIZATION
+│   └── eda.ipynb                   # FULL-PIPELINE INDEPENDENT NOTEBOOK
+├── src/                            # PIPELINE MODULARIZATION
 │   ├── __init__.py
 │   ├── analysis.py                 # FUNCTIONS TO ANSWERS Q1-Q5
 │   ├── cleaning.py                 # CLEANING FUNCTIONS
@@ -125,7 +125,7 @@ In notebooks/eda.ipynb, modify the LOADING section:
 
 Run the following blocks of code step-by-step (line by line) in your computer's terminal.
 
-**MAX/LINUX**
+**MAC/LINUX**
 ```bash
 python -m venv .venv
 
